@@ -17,6 +17,7 @@
         <allure.version>2.15.0</allure.version>
         <slf4j-api.version>2.0.12</slf4j-api.version>
         <logback-classic.version>1.5.13</logback-classic.version>
+        <jackson-databind.version>2.18.1</jackson-databind.version>
     </properties>
 
     <dependencies>
@@ -57,6 +58,11 @@
             <artifactId>allure-testng</artifactId>
             <version>${allure.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
         </dependency>
     </dependencies>
     <build>

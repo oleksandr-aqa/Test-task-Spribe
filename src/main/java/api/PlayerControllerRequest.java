@@ -5,13 +5,13 @@ import dto.request.PlayerRequest;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.apache.hc.core5.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JsonReader;
 
 import java.util.List;
 
-import static dto.request.PlayerRequest.getDefaultPlayerAdminRole;
-import static dto.request.PlayerRequest.getDefaultPlayerUserRole;
 import static io.restassured.RestAssured.given;
 
 public class PlayerControllerRequest extends MainRequest {
@@ -68,11 +68,11 @@ public class PlayerControllerRequest extends MainRequest {
     }
 
     public PlayerResponse createValidPlayerWithAdminRole() {
-        return createPlayer(getDefaultPlayerAdminRole(), 200);
+        return createPlayer(JsonReader.getPlayerRequest("admin"), HttpStatus.SC_OK);
     }
 
     public PlayerResponse createValidPlayerWithUserRole() {
-        return createPlayer(getDefaultPlayerUserRole(), 200);
+        return createPlayer(JsonReader.getPlayerRequest("user"), HttpStatus.SC_OK);
     }
 
     private PlayerResponse infoLogger(Response response) {

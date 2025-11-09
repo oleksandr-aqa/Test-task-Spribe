@@ -1,9 +1,28 @@
+### Build directories ###
 target/
-!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Maven Wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+!.mvn/wrapper/MavenWrapperDownloader.java
+
+# Игнорировать служебные файлы Maven
+.mvn/
+.mvn/timing.properties
+
+### Allure ###
+.allure/
+allure-results/
+allure-report/
+
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -11,6 +30,7 @@ target/
 *.iws
 *.iml
 *.ipr
+out/
 
 ### Eclipse ###
 .apt_generated
@@ -27,12 +47,16 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 
+### Logs ###
+*.log
+
 ### Mac OS ###
 .DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db

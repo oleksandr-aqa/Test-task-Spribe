@@ -11,6 +11,9 @@ public class PlayerRequest {
     private String role;
     private String screenName;
 
+    public PlayerRequest() {
+    }
+
     public PlayerRequest(String age, String editor, String gender, String login, String password,
                          String role, String screenName) {
         this.age = age;
@@ -43,38 +46,13 @@ public class PlayerRequest {
         );
     }
 
-
-    public static PlayerRequest getDefaultPlayerAdminRole() {
-        return new PlayerRequest(
-                "35",
-                "supervisor",
-                "male",
-                "uniqueLogin24",
-                "Qwerty123",
-                "admin",
-                "uniqueScreenName24"
-        );
-    }
-
-    public static PlayerRequest getDefaultPlayerUserRole() {
-        return new PlayerRequest(
-                "35",
-                "supervisor",
-                "male",
-                "uniqueLogin25",
-                "Qwerty123",
-                "user",
-                "uniqueScreenName25"
-        );
+    public PlayerRequest setAge(String age) {
+        this.age = age;
+        return this;
     }
 
     public String getAge() {
         return age;
-    }
-
-    public PlayerRequest setAge(String age) {
-        this.age = age;
-        return this;
     }
 
     public String getEditor() {

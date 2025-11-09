@@ -23,18 +23,6 @@ public class PlayerResponse extends BaseResponse {
         this.role = role;
     }
 
-    public static PlayerResponse getStaticSupervisorData() {
-        return new PlayerResponse(
-                "1",
-                "supervisor",
-                "testSupervisor",
-                "testSupervisor",
-                "male",
-                "28",
-                "supervisor"
-        );
-    }
-
     public String getId() {
         return id;
     }

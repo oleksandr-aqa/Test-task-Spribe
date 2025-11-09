@@ -1,0 +1,29 @@
+{
+  "supervisor": {
+    "id": "1",
+    "age": "28",
+    "login": "supervisor",
+    "password": "testSupervisor",
+    "gender": "male",
+    "role": "supervisor",
+    "screenName": "testSupervisor"
+  },
+  "admin": {
+    "age": "35",
+    "editor": "supervisor",
+    "gender": "male",
+    "login": "someDefaultLoginAdmin",
+    "password": "Qwerty123",
+    "role": "admin",
+    "screenName": "someDefaultLoginScreenNameAdmin"
+  },
+  "user": {
+    "age": "35",
+    "editor": "supervisor",
+    "gender": "male",
+    "login": "someDefaultLoginUser",
+    "password": "Qwerty123",
+    "role": "user",
+    "screenName": "someDefaultLoginScreenNameUser"
+  }
+}
