@@ -1,6 +1,7 @@
 package dto.reponse;
 
 public class PlayerResponse extends BaseResponse {
+
     private String id;
     private String login;
     private String password;
@@ -27,14 +28,6 @@ public class PlayerResponse extends BaseResponse {
         return id;
     }
 
-    public String getAge() {
-        return age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
     public String getLogin() {
         return login;
     }
@@ -43,11 +36,19 @@ public class PlayerResponse extends BaseResponse {
         return password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     public String getScreenName() {
         return screenName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public String getRole() {
+        return role;
     }
 }

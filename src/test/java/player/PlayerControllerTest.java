@@ -27,6 +27,7 @@ public class PlayerControllerTest extends BasePlayerTest {
         deletePlayer(playerId.get());
         softAssert.get().assertAll();
     }
+
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Create player with invalid data [NEGATIVE]", dataProvider = "invalidPlayerData", dataProviderClass = PlayerDataProvider.class)
     public void createPlayerInvalidDataTest(PlayerRequest playerRequest, int statusCode) {
@@ -34,6 +35,7 @@ public class PlayerControllerTest extends BasePlayerTest {
         Assert.assertEquals(playerResponse.getContentLength(), "0"); //assert that returned response is empty, player not created
     }
 
+    @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Create player with non unique fields [NEGATIVE]", dataProvider = "nonUniqueLoginAndScreenNameData", dataProviderClass = PlayerDataProvider.class)
     public void createPlayerUniqueFieldTest(PlayerRequest playerRequest, int statusCode) {
         PlayerResponse playerResponse = playerControllerRequest.createPlayer(playerRequest, statusCode);
@@ -43,47 +45,47 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'admin' role by supervisor [POSITIVE]")
     public void deletePlayerAdminBySupervisor() {
-        playerId.set(playerControllerRequest.createValidPlayerWithAdminRole().getId());
-        playerControllerRequest.deletePlayer(playerId.get(), supervisor, HttpStatus.SC_NO_CONTENT);
+        playerId.set(createValidPlayerWithAdminRole().getId());
+        playerControllerRequest.deletePlayer(playerId.get(), SUPERVISOR, HttpStatus.SC_NO_CONTENT);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'user' role by supervisor [POSITIVE]")
     public void deletePlayerUserBySupervisor() {
-        playerId.set(playerControllerRequest.createValidPlayerWithUserRole().getId());
-        playerControllerRequest.deletePlayer(playerId.get(), supervisor, HttpStatus.SC_NO_CONTENT);
+        playerId.set(createValidPlayerWithUserRole().getId());
+        playerControllerRequest.deletePlayer(playerId.get(), SUPERVISOR, HttpStatus.SC_NO_CONTENT);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'user' role by admin [POSITIVE]")
     public void deletePlayerUserByAdmin() {
-        playerId.set(playerControllerRequest.createValidPlayerWithUserRole().getId());
-        playerControllerRequest.deletePlayer(playerId.get(), admin, HttpStatus.SC_NO_CONTENT);
+        playerId.set(createValidPlayerWithUserRole().getId());
+        playerControllerRequest.deletePlayer(playerId.get(), ADMIN, HttpStatus.SC_NO_CONTENT);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'supervisor' role by admin [NEGATIVE]")
     public void deletePlayerSupervisorByAdmin() {
-        playerControllerRequest.deletePlayer(supervisorId, admin, HttpStatus.SC_FORBIDDEN);
+        playerControllerRequest.deletePlayer(SUPERVISOR_ID, ADMIN, HttpStatus.SC_FORBIDDEN);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'admin' role by user [NEGATIVE]")
     public void deletePlayerAdminByUser() {
-        playerId.set(playerControllerRequest.createValidPlayerWithAdminRole().getId());
-        playerControllerRequest.deletePlayer(playerId.get(), user, HttpStatus.SC_FORBIDDEN);
+        playerId.set(createValidPlayerWithAdminRole().getId());
+        playerControllerRequest.deletePlayer(playerId.get(), USER, HttpStatus.SC_FORBIDDEN);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Delete player 'supervisor' role by user [NEGATIVE]")
     public void deletePlayerSupervisorByUser() {
-        playerControllerRequest.deletePlayer(supervisorId, user, HttpStatus.SC_FORBIDDEN);
+        playerControllerRequest.deletePlayer(SUPERVISOR_ID, USER, HttpStatus.SC_FORBIDDEN);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Get data of supervisor role player [POSITIVE]")
     public void getSupervisorData() {
-        PlayerResponse playerResponse = playerControllerRequest.getPlayerDataById(supervisorId, HttpStatus.SC_OK);
+        PlayerResponse playerResponse = playerControllerRequest.getPlayerDataById(SUPERVISOR_ID, HttpStatus.SC_OK);
         assertFieldPlayerResponseResponse(supervisorData.get(), playerResponse);
         softAssert.get().assertAll();
     }
@@ -91,7 +93,7 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Get data of admin role player [POSITIVE]")
     public void getAdminData() { //will fail due to bug (some response fields from create method are null)
-        PlayerResponse playerResponse = playerControllerRequest.createValidPlayerWithAdminRole();
+        PlayerResponse playerResponse = createValidPlayerWithAdminRole();
         PlayerResponse playerResponse2 = playerControllerRequest.getPlayerDataById(playerResponse.getId(), HttpStatus.SC_OK);
         assertFieldPlayerResponseResponse(playerResponse2, playerResponse);
         playerId.set(playerResponse.getId());
@@ -102,7 +104,7 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Get data of user role player [POSITIVE]")
     public void getUserData() { //will fail due to bug (some response fields from create method are null)
-        PlayerResponse playerResponse = playerControllerRequest.createValidPlayerWithUserRole();
+        PlayerResponse playerResponse = createValidPlayerWithUserRole();
         PlayerResponse playerResponse2 = playerControllerRequest.getPlayerDataById(playerResponse.getId(), HttpStatus.SC_OK);
         assertFieldPlayerResponseResponse(playerResponse2, playerResponse);
         playerId.set(playerResponse.getId());
@@ -110,6 +112,7 @@ public class PlayerControllerTest extends BasePlayerTest {
         softAssert.get().assertAll();
     }
 
+    @Severity(SeverityLevel.NORMAL)
     @Test(description = "Get data of unexisted player [NEGATIVE]")
     public void getUnexistedPlayerData() {
         PlayerResponse playerResponse = playerControllerRequest.getPlayerDataById("987654321", HttpStatus.SC_OK);
@@ -119,12 +122,12 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Get data of all players [POSITIVE]")
     public void getDataAllPlayers() { //will fail due to bug (some response fields from create method are null)
-        PlayerResponse adminPlayerResponse = playerControllerRequest.createValidPlayerWithAdminRole();
-        PlayerResponse userPlayerResponse = playerControllerRequest.createValidPlayerWithUserRole();
+        PlayerResponse adminPlayerResponse = createValidPlayerWithAdminRole();
+        PlayerResponse userPlayerResponse = createValidPlayerWithUserRole();
         List<PlayerResponse> listPlayersResponse = playerControllerRequest.getAllPlayers(HttpStatus.SC_OK);
 
         PlayerResponse foundSupervisor = listPlayersResponse.stream()
-                .filter(p -> p.getId().equals(supervisorId))
+                .filter(p -> p.getId().equals(SUPERVISOR_ID))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("User player not found in list"));
         PlayerResponse foundAdmin = listPlayersResponse.stream()
@@ -149,9 +152,9 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'admin' role by supervisor [POSITIVE]")
     public void editPlayerAdminBySupervisor() {
-        playerId.set(playerControllerRequest.createValidPlayerWithAdminRole().getId());
+        playerId.set(createValidPlayerWithAdminRole().getId());
         PlayerRequest changedPlayerRequest = adminData.get().setAge(randomAge.get());
-        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, supervisor, playerId.get(), HttpStatus.SC_OK);
+        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, SUPERVISOR, playerId.get(), HttpStatus.SC_OK);
         deletePlayer(playerId.get());
         Assert.assertEquals(playerResponse.getAge(), randomAge.get());
     }
@@ -159,9 +162,9 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'user' role by supervisor [POSITIVE]")
     public void editPlayerUserBySupervisor() {
-        playerId.set(playerControllerRequest.createValidPlayerWithUserRole().getId());
+        playerId.set(createValidPlayerWithUserRole().getId());
         PlayerRequest changedPlayerRequest = userData.get().setAge(randomAge.get());
-        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, supervisor, playerId.get(), HttpStatus.SC_OK);
+        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, SUPERVISOR, playerId.get(), HttpStatus.SC_OK);
         deletePlayer(playerId.get());
         Assert.assertEquals(playerResponse.getAge(), randomAge.get());
     }
@@ -169,9 +172,9 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'user' role by admin [POSITIVE]")
     public void editPlayerUserByAdmin() {
-        playerId.set(playerControllerRequest.createValidPlayerWithUserRole().getId());
+        playerId.set(createValidPlayerWithUserRole().getId());
         PlayerRequest changedPlayerRequest = userData.get().setAge(randomAge.get());
-        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, admin, playerId.get(), HttpStatus.SC_OK);
+        PlayerResponse playerResponse = playerControllerRequest.updatePlayer(changedPlayerRequest, ADMIN, playerId.get(), HttpStatus.SC_OK);
         deletePlayer(playerId.get());
         Assert.assertEquals(playerResponse.getAge(), randomAge.get());
     }
@@ -179,24 +182,24 @@ public class PlayerControllerTest extends BasePlayerTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'admin' role by user [NEGATIVE]")
     public void editPlayerAdminByUser() {
-        playerId.set(playerControllerRequest.createValidPlayerWithAdminRole().getId());
+        playerId.set(createValidPlayerWithAdminRole().getId());
         PlayerRequest changedPlayerRequest = adminData.get().setAge(randomAge.get());
-        playerControllerRequest.updatePlayer(changedPlayerRequest, admin, playerId.get(), HttpStatus.SC_FORBIDDEN);
+        playerControllerRequest.updatePlayer(changedPlayerRequest, ADMIN, playerId.get(), HttpStatus.SC_FORBIDDEN);
         deletePlayer(playerId.get());
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'supervisor' role by admin [NEGATIVE]")
-    public void EditPlayerSupervisorByAdmin() {
+    public void editPlayerSupervisorByAdmin() {
         PlayerRequest changedPlayerRequest = adminData.get().setAge(randomAge.get());
-        playerControllerRequest.updatePlayer(changedPlayerRequest, admin, supervisorId, HttpStatus.SC_FORBIDDEN);
+        playerControllerRequest.updatePlayer(changedPlayerRequest, ADMIN, SUPERVISOR_ID, HttpStatus.SC_FORBIDDEN);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Test(description = "Edit player 'supervisor' role by user [NEGATIVE]")
-    public void EditPlayerSupervisorByUser() {
+    public void editPlayerSupervisorByUser() {
         PlayerRequest changedPlayerRequest = adminData.get().setAge(randomAge.get());
-        playerControllerRequest.updatePlayer(changedPlayerRequest, user, supervisorId, HttpStatus.SC_FORBIDDEN);
+        playerControllerRequest.updatePlayer(changedPlayerRequest, USER, SUPERVISOR_ID, HttpStatus.SC_FORBIDDEN);
     }
 
     private void assertFieldPlayerRequestResponse(PlayerRequest playerRequest, PlayerResponse playerResponse) {

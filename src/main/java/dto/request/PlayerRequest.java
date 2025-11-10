@@ -3,6 +3,7 @@ package dto.request;
 import dto.reponse.PlayerResponse;
 
 public class PlayerRequest {
+
     private String age;
     private String editor;
     private String gender;
@@ -14,8 +15,8 @@ public class PlayerRequest {
     public PlayerRequest() {
     }
 
-    public PlayerRequest(String age, String editor, String gender, String login, String password,
-                         String role, String screenName) {
+    public PlayerRequest(String age, String editor, String gender, String login,
+                         String password, String role, String screenName) {
         this.age = age;
         this.editor = editor;
         this.gender = gender;
@@ -46,11 +47,6 @@ public class PlayerRequest {
         );
     }
 
-    public PlayerRequest setAge(String age) {
-        this.age = age;
-        return this;
-    }
-
     public String getAge() {
         return age;
     }
@@ -79,4 +75,8 @@ public class PlayerRequest {
         return screenName;
     }
 
+    public PlayerRequest setAge(String age) {
+        this.age = age;
+        return this;
+    }
 }

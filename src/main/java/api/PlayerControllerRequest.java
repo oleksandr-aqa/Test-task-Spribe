@@ -3,20 +3,15 @@ package api;
 import dto.reponse.PlayerResponse;
 import dto.request.PlayerRequest;
 import io.qameta.allure.Step;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.apache.hc.core5.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.JsonReader;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class PlayerControllerRequest extends MainRequest {
+public class PlayerControllerRequest extends AbstractRequest {
 
-    private static final Logger log = LoggerFactory.getLogger(PlayerControllerRequest.class);
     private final String url = "/player";
 
     @Step("Creating the new player by role \"{editor}\"")
@@ -29,32 +24,34 @@ public class PlayerControllerRequest extends MainRequest {
                 .queryParam("role", playerRequest.getRole())
                 .queryParam("screenName", playerRequest.getScreenName())
                 .pathParam("editor", playerRequest.getEditor());
-        Response response = get(url + "/create/{editor}", requestSpecification, expectedCode);
-        return infoLogger(response);
+
+        return infoLogger(get(url + "/create/{editor}", requestSpecification, expectedCode));
     }
 
     @Step("Delete the player with id \"{playerId}\" by role \"{editor}\"")
     public void deletePlayer(String playerId, String editor, int expectedCode) {
+        Map<String, String> body = Map.of("playerId", playerId);
         RequestSpecification requestSpecification = given()
-                .body("{ \"playerId\": \"" + playerId + "\" }")
+                .body(body)
                 .pathParam("editor", editor);
+
         delete(url + "/delete/{editor}", requestSpecification, expectedCode);
     }
 
     @Step("Get information about the player with id \"{playerId}\"")
     public PlayerResponse getPlayerDataById(String playerId, int expectedCode) {
+        Map<String, String> body = Map.of("playerId", playerId);
         RequestSpecification requestSpecification = given()
-                .body("{ \"playerId\": \"" + playerId + "\" }");
-        Response response = post(url + "/get", requestSpecification, expectedCode);
-        return infoLogger(response);
+                .body(body);
+
+        return infoLogger(post(url + "/get", requestSpecification, expectedCode));
     }
 
     @Step("Get information about all players")
     public List<PlayerResponse> getAllPlayers(int expectedCode) {
         RequestSpecification requestSpecification = given();
-        Response response = get(url + "/get/all", requestSpecification, expectedCode);
-        log.info("Response: {} - {}", response.getStatusCode(), response.getBody().asString());
-        return response.jsonPath().getList("players", PlayerResponse.class);
+        return get(url + "/get/all", requestSpecification, expectedCode)
+                .jsonPath().getList("players", PlayerResponse.class);
     }
 
     @Step("Update the player with id \"{playerId}\" by role \"{editor}\"")
@@ -63,26 +60,7 @@ public class PlayerControllerRequest extends MainRequest {
                 .body(playerRequest)
                 .pathParam("editor", editor)
                 .pathParam("id", playerId);
-        Response response = patch(url + "/update/{editor}/{id}", requestSpecification, expectedCode);
-        return infoLogger(response);
-    }
 
-    public PlayerResponse createValidPlayerWithAdminRole() {
-        return createPlayer(JsonReader.getPlayerRequest("admin"), HttpStatus.SC_OK);
-    }
-
-    public PlayerResponse createValidPlayerWithUserRole() {
-        return createPlayer(JsonReader.getPlayerRequest("user"), HttpStatus.SC_OK);
-    }
-
-    private PlayerResponse infoLogger(Response response) {
-        log.info("Response: {} - {}", response.getStatusCode(), response.getBody().asString());
-        if (response.getBody().asString().isEmpty()) {
-            log.debug("Response is empty");
-            PlayerResponse emptyResponse = new PlayerResponse();
-            emptyResponse.setContentLength(response.getHeader("content-length"));
-            return emptyResponse;
-        }
-        return response.as(PlayerResponse.class);
+        return infoLogger(patch(url + "/update/{editor}/{id}", requestSpecification, expectedCode));
     }
 }

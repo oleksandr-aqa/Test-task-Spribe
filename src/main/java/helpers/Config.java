@@ -1,4 +1,4 @@
-package utils;
+package helpers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class Config {
 
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     static {
         try (InputStream inputStream = Config.class.getClassLoader()

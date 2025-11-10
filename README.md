@@ -21,7 +21,7 @@ src/
 │  │  ├─ dto/
 │  │  │  ├─ request/
 │  │  │  └─ response/
-│  │  └─ utils/
+│  │  └─ helpers/
 │  └─ resources/
 ├─ test/
 │  ├─ java/
@@ -31,18 +31,18 @@ src/
 │  └─ resources/
 pom.xml
 testng.xml
-simple API test-cases for automation.md
-Some bugs.md
+player_api_test_cases.md
+Found bugs.md
 ```
 ## Project Details
 
 The project contains the following additional files to help with testing and automation:
 
-- **`simple API test-cases for automation.md`**  
+- **`player_api_test_cases.md`**  
   A text file containing a list of API test cases in a simple format.  
   This file serves as a reference for creating automated tests.
 
-- **`Some bugs.md`**  
+- **`Found bugs.md`**  
   A text file listing known bugs or issues discovered during testing.
 
 ### Resources
